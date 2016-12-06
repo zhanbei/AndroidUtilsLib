@@ -1,43 +1,64 @@
 package com.fisher.utils;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-
+/**
+ * DensityUtils.
+ * <p>
+ * dp * mDensity = px
+ * so * mScaledDensity = px
+ */
 public class DensityUtils {
 
-	// dp * mDensity = px
-	public static float mDensity;
-	// so * mScaledDensity = px
-	public static float mScaledDensity;
-
-	public static int mScreenWidth;
-	public static int mScreenHeight;
-	public static int mSystemTitlebarHeight;
-	public static int mApplicationHeight;
-	public static int mTitlebarHeight = 100;
-
-	public static void init( Context context ) {
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		mDensity = metrics.density;
-		mScaledDensity = metrics.scaledDensity;
-		mScreenWidth = metrics.widthPixels;
-		mScreenHeight = metrics.heightPixels;
-
-
+	/**
+	 * Get screen width in pixels.
+	 *
+	 * @param context Context instance.
+	 * @return Screen Width in pixels.
+	 */
+	public static int getScreenWidth(Context context) {
+		return context.getResources().getDisplayMetrics().widthPixels;
 	}
-	public static int fnDp2px( Context context, float dpVal ) {
-		return ( int ) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, dpVal, context.getResources().getDisplayMetrics() );
+
+	/**
+	 * Get screen height in pixels.
+	 *
+	 * @param context Context instance.
+	 * @return Screen Height in pixels.
+	 */
+	public static int getScreenHeight(Context context) {
+		return context.getResources().getDisplayMetrics().heightPixels;
 	}
-	public static int sp2px( Context context, float spVal ) {
-		return ( int ) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_SP, spVal, context.getResources().getDisplayMetrics() );
+
+	/**
+	 * Get system status bar height in pixels.
+	 *
+	 * @param context Context instance.
+	 * @return System status bar height in pixels.
+	 */
+	public static int getSystemStatusBarHeight(Context context) {
+		int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			return context.getResources().getDimensionPixelSize(resourceId);
+		}
+		return 0;
 	}
-	public static float fnPx2dp( float px ) {
-		return ( px / mDensity );
+
+	public static int fnDp2px(Context context, float dpVal) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, context.getResources().getDisplayMetrics());
 	}
-	public static float fnPx2sp( float px ) {
-		return ( px / mScaledDensity );
+
+	public static int sp2px(Context context, float spVal) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spVal, context.getResources().getDisplayMetrics());
+	}
+
+	public static float fnPx2dp(Context context, float px) {
+		return (px / context.getResources().getDisplayMetrics().density);
+	}
+
+	public static float fnPx2sp(Context context, float px) {
+		return (px / context.getResources().getDisplayMetrics().scaledDensity);
 	}
 
 }

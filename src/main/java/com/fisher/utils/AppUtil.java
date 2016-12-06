@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.support.annotation.StringRes;
+import android.support.compat.BuildConfig;
 import android.telephony.TelephonyManager;
 
 import com.google.gson.Gson;
@@ -27,7 +28,7 @@ public class AppUtil {
 	/**
 	 * debug flag
 	 */
-	private static boolean sDebug = false;
+	private static boolean sDebug = BuildConfig.DEBUG;
 
 	public static void init( Context context){
 		sContext = context;
@@ -48,6 +49,7 @@ public class AppUtil {
 
 	public static void setDebug ( boolean sDebug ) {
 		AppUtil.sDebug = sDebug;
+		if(sDebug){ConsoleUtil.warning("HELLO, DEBUGGING MODE ENABLED!");}
 	}
 
 	/**
