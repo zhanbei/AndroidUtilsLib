@@ -3,8 +3,7 @@ package com.fisher.utils.constants;
 import java.io.File;
 
 /**
- * Created on 9/4/2016 at 21:41
- * By Fisher
+ * Created by Fisher on 9/4/2016 at 21:41.
  */
 public class FileConstant {
 	public static final String SEPARATOR = File.separator;

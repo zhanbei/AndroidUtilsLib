@@ -5,19 +5,36 @@ import android.app.Service;
 import com.fisher.utils.ConsoleUtil;
 import com.fisher.utils.ToastUtil;
 
-
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public abstract class BaseService extends Service {
 
-
-	protected String toast( String msg ) {
-		return ToastUtil.toast( this, msg );
+	/**
+	 * Show a toast.
+	 *
+	 * @param msg Message to be toasted.
+	 */
+	protected void toast(String msg) {
+		ToastUtil.toast(this, msg);
 	}
 
-	protected String log( Object obj ) {
-		return ConsoleUtil.console( obj );
+	/**
+	 * Log some object.
+	 *
+	 * @param obj Object
+	 */
+	protected void log(Object obj) {
+		ConsoleUtil.log(obj);
 	}
-	protected String log( String msg ) {
-		return ConsoleUtil.console( msg );
+
+	/**
+	 * Log some string.
+	 *
+	 * @param text String.
+	 */
+	protected void log(String text) {
+		ConsoleUtil.log(text);
 	}
 
 }

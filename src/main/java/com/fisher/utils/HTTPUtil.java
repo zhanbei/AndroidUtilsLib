@@ -1,6 +1,5 @@
 package com.fisher.utils;
 
-
 import android.os.Handler;
 import android.os.Message;
 
@@ -16,35 +15,37 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class HTTPUtil {
-	public static Response request ( String server, String params ) throws IOException {
-		URL url = new URL( server );
-		HttpURLConnection conn = ( HttpURLConnection ) url.openConnection();
-		conn.setInstanceFollowRedirects( false );
-		conn.setConnectTimeout( 15000 );
-		conn.setReadTimeout( 10000 );
-		conn.setConnectTimeout( 15000 );
+	public static Response request(String server, String params) throws IOException {
+		URL url = new URL(server);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setInstanceFollowRedirects(false);
+		conn.setConnectTimeout(15000);
+		conn.setReadTimeout(10000);
+		conn.setConnectTimeout(15000);
 		// set headers
-		conn.setRequestProperty( "accept", "*/*" );
-		conn.setRequestProperty( "connection", "Keep-Alive" );
-		conn.setRequestProperty( "charset", "utf-8" );
-		if ( null != params && !"".equals( params ) ) {
-			conn.setRequestMethod( "POST" );
-			conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
-			conn.setDoOutput( true );
+		conn.setRequestProperty("accept", "*/*");
+		conn.setRequestProperty("connection", "Keep-Alive");
+		conn.setRequestProperty("charset", "utf-8");
+		if (null != params && !"".equals(params)) {
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setDoOutput(true);
 			OutputStream os = conn.getOutputStream();
-			BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( os, "UTF-8" ) );
-			writer.write( params );
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(params);
 			writer.flush();
 			writer.close();
 			os.close();
 		}
-		ConsoleUtil.console( "HTTPUtil.login(server, params)-> now requesting: " + server );
+		ConsoleUtil.log("HTTPUtil.login(server, params)-> now requesting: " + server);
 		int code = conn.getResponseCode();
 		InputStream in = conn.getInputStream();
-		String response = FileUtil.getString( in );
-		return new Response( code, response ).setConnection( conn );
+		String response = FileUtil.getString(in);
+		return new Response(code, response).setConnection(conn);
 	}
 
 
@@ -53,27 +54,27 @@ public class HTTPUtil {
 		public String response;
 		public HttpURLConnection connection;
 
-		public HttpURLConnection getConnection ( ) {
+		public HttpURLConnection getConnection() {
 			return connection;
 		}
 
-		public Response setConnection ( HttpURLConnection connection ) {
+		public Response setConnection(HttpURLConnection connection) {
 			this.connection = connection;
 			return this;
 		}
 
-		public Response ( int code, String response ) {
+		public Response(int code, String response) {
 			this.code = code;
 			this.response = response;
 		}
 
 		@Override
-		public String toString ( ) {
+		public String toString() {
 			JSONObject json = new JSONObject();
 			try {
-				json.put( "code", code );
-				json.put( "response", response );
-			} catch ( JSONException e ) {
+				json.put("code", code);
+				json.put("response", response);
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			return json.toString();
@@ -81,15 +82,15 @@ public class HTTPUtil {
 	}
 
 
-	public static void download ( String url, File file, OnDownloadCompleteListener listener ) {
-		new AsyncDownload( url, file, listener ).start();
+	public static void download(String url, File file, OnDownloadCompleteListener listener) {
+		new AsyncDownload(url, file, listener).start();
 	}
 
 
 	public interface OnDownloadCompleteListener {
-		void onCompleted ( File file );
+		void onCompleted(File file);
 
-		void onFailed ( );
+		void onFailed();
 	}
 
 	static class AsyncDownload extends Thread {
@@ -97,33 +98,33 @@ public class HTTPUtil {
 		private final File file;
 		private final AsyncHandler handler;
 
-		public AsyncDownload ( String url, File file, OnDownloadCompleteListener listener ) {
+		public AsyncDownload(String url, File file, OnDownloadCompleteListener listener) {
 			this.url = url;
 			this.file = file;
-			handler = new AsyncHandler( listener );
+			handler = new AsyncHandler(listener);
 		}
 
 		@Override
-		public void run ( ) {
+		public void run() {
 			try {
-				HttpURLConnection conn = ( HttpURLConnection ) new URL( url ).openConnection();
-				conn.setConnectTimeout( 5000 );
-				conn.setReadTimeout( 10000 );
-				conn.setConnectTimeout( 15000 );
-				conn.setRequestProperty( "accept", "*/*" );
-				conn.setRequestProperty( "connection", "Keep-Alive" );
-				conn.setRequestProperty( "charset", "utf-8" );
-				ConsoleUtil.console( "HTTPUtil -> now requesting: " + url );
+				HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+				conn.setConnectTimeout(5000);
+				conn.setReadTimeout(10000);
+				conn.setConnectTimeout(15000);
+				conn.setRequestProperty("accept", "*/*");
+				conn.setRequestProperty("connection", "Keep-Alive");
+				conn.setRequestProperty("charset", "utf-8");
+				ConsoleUtil.log("HTTPUtil -> now requesting: " + url);
 				int code = conn.getResponseCode();
-				if ( HttpURLConnection.HTTP_OK == code ) {
+				if (HttpURLConnection.HTTP_OK == code) {
 					InputStream in = conn.getInputStream();
-					FileUtil.writeFile( file, in );
-					handler.onResponse( file );
+					FileUtil.writeFile(file, in);
+					handler.onResponse(file);
 				} else {
-					ConsoleUtil.warning( "Failed to download file with statusCode: " + code );
+					ConsoleUtil.warning("Failed to download file with statusCode: " + code);
 					handler.onError();
 				}
-			} catch ( IOException e ) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				handler.onError();
 			}
@@ -136,30 +137,30 @@ public class HTTPUtil {
 		private OnDownloadCompleteListener listener;
 		private File file;
 
-		public AsyncHandler ( OnDownloadCompleteListener listener ) {
+		public AsyncHandler(OnDownloadCompleteListener listener) {
 			this.listener = listener;
 		}
 
-		public void onResponse ( File file ) {
+		public void onResponse(File file) {
 			this.file = file;
-			sendEmptyMessage( MESSAGE_CODE_OK );
+			sendEmptyMessage(MESSAGE_CODE_OK);
 		}
 
-		public void onError ( ) {
-			sendEmptyMessage( MESSAGE_CODE_ERROR );
+		public void onError() {
+			sendEmptyMessage(MESSAGE_CODE_ERROR);
 		}
 
 		@Override
-		public void handleMessage ( Message msg ) {
-			if ( null == listener ) {
-				ConsoleUtil.warning( "APIHandler.handleMessage()-> feedback is null, when call async api!" );
+		public void handleMessage(Message msg) {
+			if (null == listener) {
+				ConsoleUtil.warning("APIHandler.handleMessage()-> feedback is null, when call async api!");
 				return;
 			}
-			if ( 1 == msg.what )
-				listener.onCompleted( file );
+			if (1 == msg.what)
+				listener.onCompleted(file);
 			else
 				listener.onFailed();
-			super.handleMessage( msg );
+			super.handleMessage(msg);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.fisher.utils;
 
+import android.support.annotation.Nullable;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,74 +18,94 @@ public class RegexUtil {
 	public static final String PATTERN_PASSWORD = "[a-zA-Z0-9,\\.!@#$%^&*+=\\(\\)\\[\\]\\{\\}]{6,}";
 	public static final String PATTERN_VERIFYING_CODE = "[0-9]{6}";
 
-	public static boolean isUserNameOK( String username ) {
+	public static boolean isUserNameOK(String username) {
 		boolean isOK = true;
-		if ( null == username || "".equals( username ) || username.length() < 5 || username.length() > 30 )
+		if (null == username || "".equals(username) || username.length() < 5 || username.length() > 30)
 			isOK = false;
-		if ( !isOK( PATTERN_USERNAME, username ) )
+		if (!isOK(PATTERN_USERNAME, username))
 			isOK = false;
 		return isOK;
 	}
 
-	public static boolean isUrlOk ( String url ) {
+	public static boolean isUrlOk(String url) {
 		// todo this is not correct
 		boolean isOK = true;
-		if ( null == url || "".equals( url ) )
+		if (null == url || "".equals(url))
 			isOK = false;
-		if ( !isOK( PATTERN_EMAIL, url ) )
-			isOK = false;
-		return isOK;
-	}
-	public static boolean isEmailOK( String email ) {
-		boolean isOK = true;
-		if ( null == email || "".equals( email ) || email.length() < 5 || email.length() > 30 )
-			isOK = false;
-		if ( !isOK( PATTERN_EMAIL, email ) )
+		if (!isOK(PATTERN_EMAIL, url))
 			isOK = false;
 		return isOK;
 	}
 
-	public static boolean isPhoneNumberOK( String phone ) {
+	public static boolean isEmailOK(String email) {
 		boolean isOK = true;
-		if ( null == phone || "".equals( phone ) )
+		if (null == email || "".equals(email) || email.length() < 5 || email.length() > 30)
 			isOK = false;
-		if ( !isOK( PATTERN_PHONE_NUMBER, phone ) )
+		if (!isOK(PATTERN_EMAIL, email))
 			isOK = false;
 		return isOK;
 	}
 
-	public static boolean isPasswordOK( String password ) {
+	public static boolean isPhoneNumberOK(String phone) {
 		boolean isOK = true;
-		if ( null == password || "".equals( password ) || password.length() < 6 || password.length() > 64 )
+		if (null == phone || "".equals(phone))
 			isOK = false;
-		if ( !isOK( PATTERN_PASSWORD, password ) )
+		if (!isOK(PATTERN_PHONE_NUMBER, phone))
 			isOK = false;
 		return isOK;
 	}
 
-	public static boolean isVerifyCodeOK( String verifyCode ) {
+	public static boolean isPasswordOK(String password) {
 		boolean isOK = true;
-		if ( verifyCode.length() != 6 )
+		if (null == password || "".equals(password) || password.length() < 6 || password.length() > 64)
 			isOK = false;
-		if ( !isOK( PATTERN_VERIFYING_CODE, verifyCode ) )
+		if (!isOK(PATTERN_PASSWORD, password))
 			isOK = false;
 		return isOK;
 	}
 
-	public static boolean isOK( String regex, String input ) {
-		Pattern pattern = Pattern.compile( regex );
-		Matcher matcher = pattern.matcher( input );
+	public static boolean isVerifyCodeOK(String verifyCode) {
+		boolean isOK = true;
+		if (verifyCode.length() != 6)
+			isOK = false;
+		if (!isOK(PATTERN_VERIFYING_CODE, verifyCode))
+			isOK = false;
+		return isOK;
+	}
+
+	public static boolean isOK(String regex, String input) {
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(input);
 		return matcher.matches();
 	}
 
-	public static String fnFilterFileName( String name ) {
-		return fnFilterFileName( name, "-" );
+	/**
+	 * Find targeted string in input.
+	 *
+	 * @param regex Regex string.
+	 * @param input Input string.
+	 * @return Targeted string found or null.
+	 */
+	@Nullable
+	public static String find(String regex, String input) {
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(input);
+		if (matcher.find()) {
+			return matcher.group(1);
+		} else {
+			return null;
+		}
 	}
-	public static String fnFilterFileName( String name, String replacement ) {
-		if(null==name||"".equals( name )){
-			name="default-name";
-		}else {
-			name=name.replace( "\\/:*?\"<>|", replacement );
+
+	public static String fnFilterFileName(String name) {
+		return fnFilterFileName(name, "-");
+	}
+
+	public static String fnFilterFileName(String name, String replacement) {
+		if (null == name || "".equals(name)) {
+			name = "default-name";
+		} else {
+			name = name.replace("\\/:*?\"<>|", replacement);
 		}
 		return name;
 	}

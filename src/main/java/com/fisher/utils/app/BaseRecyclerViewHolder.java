@@ -16,22 +16,23 @@ public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
 	private SparseArray<View> mViews;
 	private View mConvertView;
 
-	private BaseRecyclerViewHolder ( View itemView, ViewGroup parent) {
+	private BaseRecyclerViewHolder(View itemView, ViewGroup parent) {
 		super(itemView);
 		mConvertView = itemView;
 		mViews = new SparseArray<>();
 	}
 
 
-	public static BaseRecyclerViewHolder getItemView ( ViewGroup parent, int layoutId) {
+	public static BaseRecyclerViewHolder getItemView(ViewGroup parent, int layoutId) {
 		View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
 		return new BaseRecyclerViewHolder(itemView, parent);
 	}
 
-	public View getView(){
-		return  mConvertView;
+	public View getView() {
+		return mConvertView;
 	}
-	public <T extends View> T get ( int viewId) {
+
+	public <T extends View> T get(int viewId) {
 		View view = mViews.get(viewId);
 		if (view == null) {
 			view = mConvertView.findViewById(viewId);
@@ -40,7 +41,7 @@ public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
 		return (T) view;
 	}
 
-	public void setText( int viewId, CharSequence msg) {
+	public void setText(int viewId, CharSequence msg) {
 		TextView textView = get(viewId);
 		textView.setText(msg);
 	}

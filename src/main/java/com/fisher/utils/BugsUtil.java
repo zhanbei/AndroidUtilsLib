@@ -1,7 +1,9 @@
 package com.fisher.utils;
 
 
-
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class BugsUtil {
 	public static final String FILE_NAME = "bugs.log";
 	private static PermanentUtil util;

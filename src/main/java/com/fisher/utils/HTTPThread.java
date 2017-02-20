@@ -10,7 +10,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class HTTPThread extends Thread {
 	public static final int CONNECT_TIMEOUT = 10000;
 	public static final int READ_TIMEOUT = 10000;
@@ -19,42 +21,42 @@ public class HTTPThread extends Thread {
 	private Handler handler;
 	private String sURL;
 
-	public static void fnRequestHTTPGet( OnHTTPResponseListener onHTTPResponseListener, String url ) {
-		new HTTPThread( onHTTPResponseListener, url ).start();
+	public static void fnRequestHTTPGet(OnHTTPResponseListener onHTTPResponseListener, String url) {
+		new HTTPThread(onHTTPResponseListener, url).start();
 	}
 
-	private HTTPThread( OnHTTPResponseListener onHTTPResponseListener, String url ) {
-		this.handler = new HTTPHandler( onHTTPResponseListener );
+	private HTTPThread(OnHTTPResponseListener onHTTPResponseListener, String url) {
+		this.handler = new HTTPHandler(onHTTPResponseListener);
 		this.sURL = url;
 	}
 
 	@Override
-	public void run( ) {
+	public void run() {
 		try {
 			String response = "";
-			URL url = new URL( sURL );
-			HttpURLConnection conn = ( HttpURLConnection ) url.openConnection();
-			conn.setConnectTimeout( CONNECT_TIMEOUT );
-			conn.setReadTimeout( READ_TIMEOUT );
-			conn.setRequestMethod( "GET" );
-			conn.setRequestProperty( "accept", "*/*" );
-			conn.setRequestProperty( "connection", "Keep-Alive" );
-			if ( conn.getResponseCode() == 200 ) {
+			URL url = new URL(sURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setConnectTimeout(CONNECT_TIMEOUT);
+			conn.setReadTimeout(READ_TIMEOUT);
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("accept", "*/*");
+			conn.setRequestProperty("connection", "Keep-Alive");
+			if (conn.getResponseCode() == 200) {
 				InputStream is = conn.getInputStream();
-				response = StreamUtil.getString( is, HTTP_CHARSET );
+				response = StreamUtil.getString(is, HTTP_CHARSET);
 			} else {
 				response = "Failed to load assets";
 			}
 
 			Message msg = new Message();
 			Bundle bundle = new Bundle();
-			bundle.putString( HTTPHandler.MESSAGE_KEY, response );
-			msg.setData( bundle );
-			handler.sendMessage( msg );
+			bundle.putString(HTTPHandler.MESSAGE_KEY, response);
+			msg.setData(bundle);
+			handler.sendMessage(msg);
 
-		} catch ( MalformedURLException e ) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch ( IOException e ) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -65,21 +67,21 @@ public class HTTPThread extends Thread {
 
 		private OnHTTPResponseListener process;
 
-		public HTTPHandler( OnHTTPResponseListener processer ) {
+		public HTTPHandler(OnHTTPResponseListener processer) {
 			this.process = processer;
 		}
 
 		@Override
-		public void handleMessage( Message msg ) {
+		public void handleMessage(Message msg) {
 			Bundle bundle = msg.getData();
-			String result = bundle.getString( MESSAGE_KEY );
-			process.onHTTPGetResponse( result );
-			super.handleMessage( msg );
+			String result = bundle.getString(MESSAGE_KEY);
+			process.onHTTPGetResponse(result);
+			super.handleMessage(msg);
 		}
 	}
 
 
 	public interface OnHTTPResponseListener {
-		void onHTTPGetResponse ( String result );
+		void onHTTPGetResponse(String result);
 	}
 }

@@ -19,6 +19,9 @@ import com.google.gson.Gson;
 
 import java.util.Locale;
 
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class AppUtil {
 
 	/**
@@ -30,7 +33,7 @@ public class AppUtil {
 	 */
 	private static boolean sDebug = BuildConfig.DEBUG;
 
-	public static void init( Context context){
+	public static void init(Context context) {
 		sContext = context;
 	}
 
@@ -39,17 +42,17 @@ public class AppUtil {
 	 *
 	 * @return context
 	 */
-	public static Context getContext ( ) {
+	public static Context getContext() {
 		return sContext;
 	}
 
-	public static boolean isDebug ( ) {
+	public static boolean isDebug() {
 		return sDebug;
 	}
 
-	public static void setDebug ( boolean sDebug ) {
+	public static void setDebug(boolean sDebug) {
 		AppUtil.sDebug = sDebug;
-		if(sDebug){ConsoleUtil.warning("HELLO, DEBUGGING MODE ENABLED!");}
+		if (sDebug) {ConsoleUtil.warning("HELLO, DEBUGGING MODE ENABLED!");}
 	}
 
 	/**
@@ -166,17 +169,17 @@ public class AppUtil {
 
 	public static void fnGetRunningApps() {
 		ActivityManager manager = (ActivityManager) AppUtil.getContext().getSystemService(Context.ACTIVITY_SERVICE);
-		ConsoleUtil.console("----------------------------running-apps------------------------------");
+		ConsoleUtil.log("----------------------------running-apps------------------------------");
 		for (ActivityManager.RunningAppProcessInfo info : manager.getRunningAppProcesses()) {
-			ConsoleUtil.console(new Gson().toJson(info));
+			ConsoleUtil.log(new Gson().toJson(info));
 		}
 	}
 
 	public static void fnKillRunningApps() {
 		ActivityManager manager = (ActivityManager) AppUtil.getContext().getSystemService(Context.ACTIVITY_SERVICE);
-		ConsoleUtil.console("----------------------------installed-apps------------------------------");
+		ConsoleUtil.log("----------------------------installed-apps------------------------------");
 		for (ActivityManager.RunningAppProcessInfo info : manager.getRunningAppProcesses()) {
-			ConsoleUtil.console(new Gson().toJson(info));
+			ConsoleUtil.log(new Gson().toJson(info));
 		}
 	}
 
@@ -184,9 +187,9 @@ public class AppUtil {
 		PackageManager manager = AppUtil.getContext().getPackageManager();
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-		ConsoleUtil.console("----------------------------installed-apps------------------------------");
+		ConsoleUtil.log("----------------------------installed-apps------------------------------");
 		for (ResolveInfo info : manager.queryIntentActivities(mainIntent, 0)) {
-			ConsoleUtil.console(new Gson().toJson(info));
+			ConsoleUtil.log(new Gson().toJson(info));
 		}
 
 	}
@@ -514,7 +517,7 @@ public class AppUtil {
 		TelephonyManager mTelephonyMgr = (TelephonyManager) AppUtil.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 		String imsi = mTelephonyMgr.getSubscriberId();
 		String imei = mTelephonyMgr.getDeviceId();
-		ConsoleUtil.console("imsi: " + imsi + "; imei: " + imei + ";");
+		ConsoleUtil.log("imsi: " + imsi + "; imei: " + imei + ";");
 	}
 
 	public static int getColor(int colorResourceId) {
@@ -542,15 +545,13 @@ public class AppUtil {
 	* */
 	public static void startActivityFromCenter(Activity activity, Class activityClass) {
 		activity.startActivity(new Intent(activity, activityClass));
-		activity.overridePendingTransition(R.anim.activity_zoom_in_from_center, R.anim.activity_zoom_out_to_center );
+		activity.overridePendingTransition(R.anim.activity_zoom_in_from_center, R.anim.activity_zoom_out_to_center);
 	}
 
 	public static void startActivityFromRight(Activity activity, Class activityClass) {
 		activity.startActivity(new Intent(activity, activityClass));
-		activity.overridePendingTransition(R.anim.activity_push_in_from_right, R.anim.activity_push_out_to_left );
+		activity.overridePendingTransition(R.anim.activity_push_in_from_right, R.anim.activity_push_out_to_left);
 	}
-
-
 
 
 }

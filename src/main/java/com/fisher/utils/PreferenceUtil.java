@@ -5,45 +5,48 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 
-// TODO used as the parent class for single instance
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ * TODO used as the parent class for single instance
+ */
 public class PreferenceUtil {
 
 	public static PreferenceUtil setting;
 
 
-	public static < T extends PreferenceUtil > T getInstance ( Class< T > t, File file ) {
-		if ( null != setting )
+	public static <T extends PreferenceUtil> T getInstance(Class<T> t, File file) {
+		if (null != setting)
 			return (T) setting;
-		String json = FileUtil.readFileWithoutException( file );
-		if ( !"".equals( json ) ) {
+		String json = FileUtil.readFileWithoutException(file);
+		if (!"".equals(json)) {
 			try {
-				setting = new Gson().fromJson( json, t );
-			} catch ( JsonSyntaxException e ) {
+				setting = new Gson().fromJson(json, t);
+			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
-				BugsUtil.onFatalError( "PreferenceUtil.flush()-> json string format failed[ configure edited ]!" );
+				BugsUtil.onFatalError("PreferenceUtil.flush()-> json string format failed[ configure edited ]!");
 			}
 		}
-		if ( null == setting ) {
+		if (null == setting) {
 			try {
 				setting = t.newInstance();
-			} catch ( Exception e ) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return (T) setting;
 	}
 
-	public static File getInternalFile ( String filename ) {
-		return FileUtil.getInternalFile( filename );
+	public static File getInternalFile(String filename) {
+		return FileUtil.getInternalFile(filename);
 	}
 
-	public static void flush ( File file ) {
-		FileUtil.writeFileWithoutException( file, setting.toString() );
+	public static void flush(File file) {
+		FileUtil.writeFileWithoutException(file, setting.toString());
 	}
 
 	@Override
-	public String toString () {
-		return new Gson().toJson( this );
+	public String toString() {
+		return new Gson().toJson(this);
 	}
 
 

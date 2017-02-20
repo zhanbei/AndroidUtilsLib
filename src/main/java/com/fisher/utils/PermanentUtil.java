@@ -1,59 +1,64 @@
 package com.fisher.utils;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class PermanentUtil {
 	public static String defaultCharset = "utf-8";
 	private OutputStreamWriter osw;
 
-	public static PermanentUtil get( String name, String charset ) {
+	public static PermanentUtil get(String name, String charset) {
 		PermanentUtil util = null;
 		try {
-			util = new PermanentUtil().init( name, charset );
-		} catch ( Exception e ) {
+			util = new PermanentUtil().init(name, charset);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return util;
 	}
-	public static PermanentUtil get( String name ) {
-		return get( name, defaultCharset );
+
+	public static PermanentUtil get(String name) {
+		return get(name, defaultCharset);
 	}
 
-	private PermanentUtil( ) {
+	private PermanentUtil() {
 	}
-	private PermanentUtil init( String name, String charset ) throws Exception {
-		if ( !name.startsWith( "/" ) ) {
+
+	private PermanentUtil init(String name, String charset) throws Exception {
+		if (!name.startsWith("/")) {
 			name = FileUtil.FILE_PATH_APP_LOG + "/" + name;
 		}
-		if ( new File( name ).getParentFile().exists() || new File( name ).getParentFile().mkdirs() )
-			osw = new OutputStreamWriter( new FileOutputStream( name, true ), charset );
+		if (new File(name).getParentFile().exists() || new File(name).getParentFile().mkdirs())
+			osw = new OutputStreamWriter(new FileOutputStream(name, true), charset);
 		return this;
 	}
 
 
-	public boolean write( String msg ) {
-		if ( osw == null )
+	public boolean write(String msg) {
+		if (osw == null)
 			return false;
 		try {
-			osw.write( msg );
+			osw.write(msg);
 			osw.flush();
-		} catch ( IOException e ) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
+
 	public boolean close() {
 		try {
-			if ( osw != null ) {
+			if (osw != null) {
 				osw.close();
 				osw = null;
 			}
-		} catch ( IOException e ) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}

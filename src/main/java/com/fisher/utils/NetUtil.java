@@ -9,11 +9,12 @@ import android.os.Build;
 
 import com.google.gson.Gson;
 
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * `Created` by Fisher at 23:06 on 2017-02-20.
+ */
 public class NetUtil {
 	public static String ip = ""; // ip in string form
 	public static int ipInt = 0; // ip in integer form
@@ -33,38 +34,38 @@ public class NetUtil {
 	private static int rssi = 0;
 	private static WifiInfo wifiInfo;
 
-	public String toString () {
-		return new Gson().toJson( this );
+	public String toString() {
+		return new Gson().toJson(this);
 	}
 
-	private static void clear () {
+	private static void clear() {
 		ip = mac = ssid = bssid = "";
 		ipInt = frequency = linkSpeed = netWorkId = rssi = 0;
 		wifiInfo = null;
 	}
 
-	public static void flush () {
+	public static void flush() {
 		Context context = AppUtil.getContext();
-		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE );
-		WifiManager wifiManager = (WifiManager) context.getSystemService( Context.WIFI_SERVICE );
+		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		// info will be null if the internet is not available
 		NetworkInfo info = connectivity.getActiveNetworkInfo();
 		wifiInfo = wifiManager.getConnectionInfo();
 
-		if ( null != info && info.isConnected() ) {
+		if (null != info && info.isConnected()) {
 			isConnected = true;
-			isWifi = ( info.getType() == ConnectivityManager.TYPE_WIFI );
+			isWifi = (info.getType() == ConnectivityManager.TYPE_WIFI);
 		} else {
 			isConnected = false;
 			isWifi = false;
 		}
 
 		ipInt = wifiInfo.getIpAddress();
-		ip = ( ( ipInt & 0xff ) + "." + ( ipInt >> 8 & 0xff ) + "." + ( ipInt >> 16 & 0xff ) + "." + ( ipInt >> 24 & 0xff ) );
+		ip = ((ipInt & 0xff) + "." + (ipInt >> 8 & 0xff) + "." + (ipInt >> 16 & 0xff) + "." + (ipInt >> 24 & 0xff));
 		mac = wifiInfo.getMacAddress();
 		ssid = wifiInfo.getSSID();
 		bssid = wifiInfo.getBSSID();
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			frequency = wifiInfo.getFrequency();
 		}
 		linkSpeed = wifiInfo.getLinkSpeed();
@@ -73,31 +74,31 @@ public class NetUtil {
 	}
 
 
-	public static String toReadableString () {
+	public static String toReadableString() {
 		JSONObject json = new JSONObject();
 		try {
-			json.put( "ip", ip );
-			json.put( "ipInt", ipInt );
-			json.put( "mac", mac );
-			json.put( "ssid", ssid );
-			json.put( "isConnected", isConnected );
-			json.put( "isWifi", isWifi );
-			json.put( "bssid", bssid );
-			json.put( "frequency", frequency );
-			json.put( "linkSpeed", linkSpeed );
-			json.put( "netWorkId", netWorkId );
-			json.put( "rssi", rssi );
-			json.put( "wifiInfo", wifiInfo.toString() );
-		} catch ( JSONException e ) {
+			json.put("ip", ip);
+			json.put("ipInt", ipInt);
+			json.put("mac", mac);
+			json.put("ssid", ssid);
+			json.put("isConnected", isConnected);
+			json.put("isWifi", isWifi);
+			json.put("bssid", bssid);
+			json.put("frequency", frequency);
+			json.put("linkSpeed", linkSpeed);
+			json.put("netWorkId", netWorkId);
+			json.put("rssi", rssi);
+			json.put("wifiInfo", wifiInfo.toString());
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return json.toString();
 	}
 
 
-	public static boolean isOfflineAndToast ( ) {
-		if(!isConnected)
-		ToastUtil.toast(R.string.toast_global_device_offline_check_internet );
+	public static boolean isOfflineAndToast() {
+		if (!isConnected)
+			ToastUtil.toast(R.string.toast_global_device_offline_check_internet);
 		return !isConnected;
 	}
 }
